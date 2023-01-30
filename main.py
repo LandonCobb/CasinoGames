@@ -1,1 +1,2 @@
-print('poop')
+while True:
+    print('poop')
