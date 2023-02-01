@@ -84,7 +84,6 @@ def init_slots():
             color = "black"
         slots.append(Slot(i, color, x))
 
-        
 
 if __name__ == "__main__":
     start_game()
