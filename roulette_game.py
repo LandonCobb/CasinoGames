@@ -58,11 +58,18 @@ def play_ball_animation(selected):
 def draw_objects():
     window.fill((255, 255, 255))
     window.blit(wheel, (10, 10))
+    
+def display_board(betting_board):
+    for row in range(len(betting_board)):
+        for col in range(len(betting_board[row])):
+            pg.draw.rect(window, (0, 0, 0), betting_board[row][col])
 
 def start_game():
     global window
-    window = pg.display.set_mode((840, 680))
+    window = pg.display.set_mode((1200, 680))
     pg.display.set_caption("Roulette")
+    piece_size = 75
+    board = [[pg.Rect(((piece_size + 5) * col) + 692, ((piece_size + 5) * row) + 28, piece_size, piece_size) for col in range(5)] for row in range(5)]
     spun = False
     chosen = None
     init_slots()
@@ -83,6 +90,7 @@ def start_game():
                 print(slots[chosen].number)
                 play_ball_animation(chosen)
         draw_objects()
+        display_board(board)
         if spun:
             pg.draw.circle(window, (0, 0, 0), list_of_things[chosen], 10.0)
         pg.display.update()
