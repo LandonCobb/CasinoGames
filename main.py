@@ -1,12 +1,13 @@
 import pygame, os, pygame_menu, roulette_game
+
+
 os.environ['SDL_VIDEO_CENTERED'] = '1'
-
 pygame.init()
-
 info = pygame.display.Info()
 screen_width,screen_height = info.current_w,info.current_h
 menu_screen = pygame.display.set_mode((screen_width, screen_height-60))
 roulette_screen = pygame.display.set_mode((screen_width, screen_height-60))
+pygame.display.update()
 
 
 def roulette():
@@ -31,7 +32,7 @@ mainTheme = pygame_menu.Theme(background_color=(181, 129, 214, 255),
                 title_background_color=(109, 70, 156),
                 title_font_shadow=True)
 
-main_menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height-60, theme=pygame_menu.themes.mainTheme)
+main_menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height-60, theme=mainTheme)
 roulette_menu = pygame_menu.Menu('Welcome', screen_width, screen_height-60, theme=pygame_menu.themes.THEME_BLUE)
 
 
