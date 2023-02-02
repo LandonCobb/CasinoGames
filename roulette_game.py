@@ -4,7 +4,7 @@ import random
 
 
 class Bet:
-    def __init__(self, amount, number=None, color=None, even=None, odd=None, range=None):
+    def __init__(self, amount, number=None, color=None, even=False, odd=False, range=None):
         self.amount = amount
         self.number = number
         self.color = color
@@ -72,16 +72,16 @@ def start_game():
                 pg.quit()
                 sys.exit()
 
-            # code to easily save mouse positions
             if event.type == pg.MOUSEBUTTONDOWN:
+                # code to easily save mouse positions
                 # with open("cords.txt", "a") as cords:
                 #     cords.write(", ".join(map(str, event.pos)))
                 #     cords.write("\n")
                 
                 spun = True
                 chosen = random.randint(0, len(slots) - 1)
-                play_ball_animation(chosen)
                 print(slots[chosen].number)
+                play_ball_animation(chosen)
         draw_objects()
         if spun:
             pg.draw.circle(window, (0, 0, 0), list_of_things[chosen], 10.0)
