@@ -1,24 +1,27 @@
 import pygame as pg
 import sys
 
+
 class Bet:
-    def __init__(self, amount, number = None, color = None, even = None, odd = None, range = None):
+    def __init__(self, amount, number=None, color=None, even=None, odd=None, range=None):
         self.amount = amount
         self.number = number
         self.color = color
         self.even = even
         self.odd = odd
         self.range = range
-        
+
     def payout(self):
-        pass        
+        pass
+
 
 class Slot:
     def __init__(self, number, color, cord):
         self.number = number
         self.color = color
         self.cord = cord
-    
+
+
 pg.init()
 
 window = pg.display.set_mode((840, 680))
@@ -26,7 +29,9 @@ pg.display.set_caption("Roulette")
 
 wheel = pg.transform.scale(pg.image.load("roulette-assets\paintroulette.png"), (700, 500))
 
-list_of_things = [(285, 314), (291, 248), (308, 195), (350, 161), (416, 178), (456, 221), (461, 263), (459, 309), (442, 350), (405, 382), (348, 391), (318, 380), (303, 340)]
+list_of_things = [(285, 314), (291, 248), (308, 195), (350, 161), (416, 178), (456, 221), (461, 263), (459, 309),
+                  (442, 350), (405, 382), (348, 391), (318, 380), (303, 340)]
+
 
 def play_ball_animation():
     playing = True
@@ -40,11 +45,12 @@ def play_ball_animation():
         else:
             position += 1
         pg.display.update()
-        
+
+
 def draw_objects():
     window.fill((255, 255, 255))
     window.blit(wheel, (10, 10))
-    
+
 
 def start_game():
     while True:
@@ -52,7 +58,7 @@ def start_game():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-                
+
             # code to easily save mouse positions
             if event.type == pg.MOUSEBUTTONDOWN:
                 # with open("cords.txt", "a") as cords:
@@ -60,7 +66,8 @@ def start_game():
                 #     cords.write("\n")
                 play_ball_animation()
         draw_objects()
-        pg.display.update()       
+        pg.display.update()
+
 
 if __name__ == "__main__":
     start_game()
