@@ -28,6 +28,8 @@ def craps():
 def playerAccount():
     pass
 
+print("balls")
+
 
 main_menu = pygame_menu.Menu('Welcome', 1700, 1050, theme=pygame_menu.themes.THEME_BLUE)
 roulette_menu = pygame_menu.Menu('Welcome', 1700, 1050, theme=pygame_menu.themes.THEME_BLUE)
