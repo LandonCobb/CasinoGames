@@ -1,11 +1,13 @@
 import pygame
-import pygame_menu
+import pygame_menu, os
 
-# while True:
-#    print('poop')
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 pygame.init()
-surface = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+info = pygame.display.Info()
+screen_width,screen_height = info.current_w,info.current_h
+surface = pygame.display.set_mode((screen_width, screen_height-60))
 
 
 def roulette():
@@ -23,10 +25,13 @@ def craps():
 def playerAccount():
     pass
 
+mytheme = pygame_menu.Theme(background_color=(181, 129, 214, 255),
+                title_background_color=(109, 70, 156),
+                title_font_shadow=True)
 
-menu = pygame_menu.Menu('Welcome', 800, 600, theme=pygame_menu.themes.THEME_BLUE)
+menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height-60, theme=mytheme)
 
-menu.add.text_input('Name :', default="LeBron James")  # can store this value somewhere
+menu.add.text_input('Name :', default="LeBron James")
 menu.add.button('Roulette Table', roulette)
 menu.add.button('Black Jack', leonardo)
 menu.add.button('Craps', craps)
