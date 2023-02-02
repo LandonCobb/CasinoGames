@@ -1,13 +1,12 @@
-import pygame
-import pygame_menu
-import roulette_game
-
-# while True:
-#    print('poop')
+import pygame, os, pygame_menu, roulette_game
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 
 pygame.init()
-menu_screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-roulette_screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+info = pygame.display.Info()
+screen_width,screen_height = info.current_w,info.current_h
+menu_screen = pygame.display.set_mode((screen_width, screen_height-60))
+roulette_screen = pygame.display.set_mode((screen_width, screen_height-60))
 
 
 def roulette():
@@ -28,9 +27,13 @@ def craps():
 def playerAccount():
     pass
 
+mainTheme = pygame_menu.Theme(background_color=(181, 129, 214, 255),
+                title_background_color=(109, 70, 156),
+                title_font_shadow=True)
 
-main_menu = pygame_menu.Menu('Welcome', 1700, 1050, theme=pygame_menu.themes.THEME_BLUE)
-roulette_menu = pygame_menu.Menu('Welcome', 1700, 1050, theme=pygame_menu.themes.THEME_BLUE)
+main_menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height-60, theme=pygame_menu.themes.mainTheme)
+roulette_menu = pygame_menu.Menu('Welcome', screen_width, screen_height-60, theme=pygame_menu.themes.THEME_BLUE)
+
 
 name = main_menu.add.text_input('Name :', default="LeBron James").get_value()  # can store this value somewhere
 main_menu.add.button('Roulette Table', roulette_game.start_game)
