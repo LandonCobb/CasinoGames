@@ -1,13 +1,15 @@
 import pygame as pg
 import sys
+import random
 
+slotValues = [1, 2, 3, 4, 5];
 
-class Dice:
-    def __init__(self, value):
-        self.value = value
-
-    def payout(self):
-        pass
+slotResult1 = random.choice(slotValues)
+slotResult2 = random.choice(slotValues)
+slotResult3 = random.choice(slotValues)
+print(slotResult1)
+print(slotResult2)
+print(slotResult3)
 
 pg.init()
 
@@ -24,7 +26,7 @@ def draw_objects():
 
 def start_game():
     global window
-    pg.display.set_caption("Craps")
+    pg.display.set_caption("Slots")
     window = pg.display.set_mode((1200, 680))
     while True:
         for event in pg.event.get():
