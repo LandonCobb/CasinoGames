@@ -2,7 +2,6 @@ import pygame as pg
 import sys
 import random
 
-
 class Bet:
     def __init__(self, amount, number=None, color=None, even=False, odd=False, range=None):
         self.amount = amount
@@ -11,10 +10,9 @@ class Bet:
         self.even = even
         self.odd = odd
         self.range = range
-
+        
     def payout(self):
         pass
-
 
 class Slot:
     def __init__(self, number, color, cord):
