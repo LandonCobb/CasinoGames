@@ -2,39 +2,58 @@ import pygame as pg
 import sys
 import random
 
-slotValues = [1, 2, 3, 4, 5];
-
-slotResult1 = random.choice(slotValues)
-slotResult2 = random.choice(slotValues)
-slotResult3 = random.choice(slotValues)
-print(slotResult1)
-print(slotResult2)
-print(slotResult3)
+# set the game screen
 
 pg.init()
+pg.display.set_caption("Slots")
 
 window = None
-maxwell = pg.image.load("casino-assets/maxwell.png")
+ohNo5 = pg.image.load("slots_assets/ohno.png")
+maxwell4 = pg.image.load("slots_assets/maxwell.png")
+moyai3 = pg.image.load("slots_assets/moyai.png")
+braindead2 = pg.image.load("slots_assets/braindead.png")
+you1 = pg.image.load("slots_assets/you.png")
 
-window = pg.display.set_mode((840, 680))
+slot_items = [you1, braindead2, moyai3, maxwell4, ohNo5]
+
+lever = pg.Rect(1550, 10, 50, 300) # , , length height
 
 
 def draw_objects():
-    window.fill((255, 255, 255))
-    window.blit(maxwell, (20, 20))
+    window.fill((151, 42, 39))  # fill with color
 
 
 def start_game():
     global window
-    pg.display.set_caption("Slots")
-    window = pg.display.set_mode((1200, 680))
+
+    window = pg.display.set_mode((2000, 1700))
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+            if event.type == pg.MOUSEBUTTONUP:
+                pos = pg.mouse.get_pos()
+                if lever.collidepoint(pos):
+                    game_logic()
         draw_objects()
+        pg.draw.rect(window, (255, 0, 0), lever)
         pg.display.update()
+
+
+def game_logic():
+    slot1 = random.choice(slot_items)
+    slot2 = random.choice(slot_items)
+    slot3 = random.choice(slot_items)
+
+    window.blit(slot1, (10, 10))
+    window.blit(slot2, (10, 10))
+    window.blit(slot3, (10, 10))
+    print(slot1)
+    print(slot2)
+    print(slot3)
+
+    pg.display.update()
 
 
 if __name__ == "__main__":
