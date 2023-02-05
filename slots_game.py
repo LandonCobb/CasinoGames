@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 import random
 
-slotValues = [1, 2, 3, 4, 5];
+slotValues = [1, 2, 3, 4, 5]
 
 slotResult1 = random.choice(slotValues)
 slotResult2 = random.choice(slotValues)
@@ -14,7 +14,7 @@ print(slotResult3)
 pg.init()
 
 window = None
-maxwell = pg.image.load("casino-assets/maxwell.png")
+maxwell = pg.image.load("slots_assets/maxwell.png")
 
 window = pg.display.set_mode((840, 680))
 
