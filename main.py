@@ -1,16 +1,9 @@
-import pygame, pyautogui, pygame_menu, roulette_game, slots_game
-
-import blackjack_game
+import pygame, pyautogui, pygame_menu, roulette_game, slots_game, blackjack_game
 
 pygame.init()
 screen_width, screen_height = pyautogui.size()
 base_screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
 pygame.display.update()
-
-
-def leonardo():
-    pass
-
 
 def craps():
     pass
