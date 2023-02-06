@@ -13,6 +13,7 @@ maxwell4 = pg.image.load("slots_assets/maxwell.png")
 moyai3 = pg.image.load("slots_assets/moyai.png")
 braindead2 = pg.image.load("slots_assets/braindead.png")
 you1 = pg.image.load("slots_assets/you.png")
+machine = pg.image.load("slots_assets/machine.png")
 
 slot_items = [you1, braindead2, moyai3, maxwell4, ohNo5]
 
@@ -25,8 +26,10 @@ def draw_objects():
 
 def start_game():
     global window
-
     window = pg.display.set_mode((2000, 1700))
+    draw_objects()
+    pg.draw.rect(window, (255, 0, 0), lever)
+    window.blit(machine, (50,300))
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -36,8 +39,6 @@ def start_game():
                 pos = pg.mouse.get_pos()
                 if lever.collidepoint(pos):
                     game_logic()
-        draw_objects()
-        pg.draw.rect(window, (255, 0, 0), lever)
         pg.display.update()
 
 
