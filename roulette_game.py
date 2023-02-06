@@ -25,7 +25,7 @@ class Slot:
 
 pg.init()
 
-window = None
+window = pg.display.set_mode((1200, 680))
 
 wheel = pg.image.load("roulette-assets\paintroulette_smol.png")
 
@@ -41,6 +41,22 @@ betting_board = [
     [pg.Rect(((piece_size + 5) * col) + 692, ((piece_size + 5) * row) + 28, piece_size, piece_size) for col in range(5)]
     for row in range(5)]
 
+# globals for betting
+bet_font = pg.font.Font(None, 36) 
+bet = 0
+up_bet_rect = pg.Rect(890, 504, 36, 40)
+down_bet_rect = pg.Rect(890, 584, 36, 40)
+
+def init_slots():
+    for i, x in enumerate(list_of_things):
+        color = None
+        if i == 0:
+            color = "green"
+        elif i % 2 == 1:
+            color = "red"
+        elif i % 2 == 0:
+            color = "black"
+        slots.append(Slot(numbers[i], color, x))
 
 def play_ball_animation(selected):
     playing = True
@@ -61,7 +77,23 @@ def play_ball_animation(selected):
 
 
 def draw_objects():
+    # background color
     window.fill((255, 255, 255))
+
+    # betting elements
+    bet_text = bet_font.render(f"{bet}", True, (0, 0, 0))
+    window.blit(bet_text, (900, 554))
+
+    up_bet_text = bet_font.render("+", True, (0, 0, 0))
+    up_bet_text_rect = up_bet_text.get_rect(center = up_bet_rect.center)
+    pg.draw.rect(window, (240, 240, 240), up_bet_rect)
+    window.blit(up_bet_text, up_bet_text_rect)
+    down_bet_text = bet_font.render("-", True, (0, 0, 0))
+    down_bet_text_rect = down_bet_text.get_rect(center = down_bet_rect.center)
+    pg.draw.rect(window, (240, 240, 240), down_bet_rect)
+    window.blit(down_bet_text, down_bet_text_rect)
+    #####
+
     window.blit(wheel, (20, 20))
     display_board(betting_board)
 
@@ -74,6 +106,8 @@ def display_board(betting_board):
 
 def start_game():
     global window
+    global bet
+    
     window = pg.display.set_mode((1200, 680))
     pg.display.set_caption("Roulette")
     spun = False
@@ -91,27 +125,20 @@ def start_game():
                 #     cords.write(", ".join(map(str, event.pos)))
                 #     cords.write("\n")
 
-                spun = True
-                chosen = random.randint(0, len(slots) - 1)
-                print(slots[chosen].number)
-                play_ball_animation(chosen)
+                # temp code for testing spins
+                # spun = True
+                # chosen = random.randint(0, len(slots) - 1)
+                # play_ball_animation(chosen)
+                if up_bet_rect.collidepoint(event.pos):
+                    bet += 5
+                if down_bet_rect.collidepoint(event.pos):
+                    if bet >= 5:
+                        bet -= 5
+
         draw_objects()
         if spun:
             pg.draw.circle(window, (0, 0, 0), list_of_things[chosen], 10.0)
         pg.display.update()
-
-
-def init_slots():
-    for i, x in enumerate(list_of_things):
-        color = None
-        if i == 0:
-            color = "green"
-        elif i % 2 == 1:
-            color = "red"
-        elif i % 2 == 0:
-            color = "black"
-        slots.append(Slot(numbers[i], color, x))
-
 
 if __name__ == "__main__":
     start_game()
