@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 import random
 
-# set the game screen
+# set the game screen 
 
 pg.init()
 pg.display.set_caption("Slots")
