@@ -5,11 +5,6 @@ screen_width, screen_height = pyautogui.size()
 base_screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
 pygame.display.update()
 
-
-def leonardo():
-    pass
-
-
 def craps():
     pass
 
