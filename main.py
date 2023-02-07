@@ -1,4 +1,5 @@
-import pygame, pyautogui, pygame_menu, roulette_game, slots_game, blackjack_game
+import pygame, pyautogui, pygame_menu, slots_game, blackjack_game
+from roulette_game import Roulette
 
 pygame.init()
 screen_width, screen_height = pyautogui.size()
@@ -27,7 +28,7 @@ mainTheme = pygame_menu.Theme(
 main_menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height, theme=mainTheme)
 
 name = main_menu.add.text_input('Name :', default="LeBron James").get_value()  # can store this value somewhere
-main_menu.add.button('Roulette Table', roulette_game.start_game)
+main_menu.add.button('Roulette Table', Roulette().start_game)
 main_menu.add.button('Black Jack', blackjack_game.start_game)
 main_menu.add.button('Slots', slots_game.start_game)
 main_menu.add.button('Craps', craps)
