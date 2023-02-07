@@ -8,20 +8,22 @@ class Bet:
         self.amount = amount
         self.number = number
         self.color = color
-        self.payout_amount = self.payout()
-
-    def payout(self):
-        return 0
+        self.payout_amount = amount
     
     def check_for_win(self, slot):
         if self.number != None:
             if self.number == slot.number:
+                self.payout_amount = self.amount * 13
                 return True
         elif self.color != None:
             if self.color == slot.color:
+                self.payout_amount = self.amount * 2
                 return True
         else:
             return False
+
+    def __repr__(self) -> str:
+        return f"Bet({self.amount}, {self.number}, {self.color})"
 
 class Slot:
     def __init__(self, number, color, cord):
@@ -33,21 +35,24 @@ class Slot:
         return f"Slot({self.number}, {self.color}, {self.cord})"
 
 class Roulette:
-    def __init__(self):
+    def __init__(self, starting_amount = 1000):
         pg.init()
+        
+        self.starting_amount = starting_amount
 
         self.window = pg.display.set_mode((1200, 680))
 
         self.wheel = pg.image.load("roulette-assets\paintroulette_smol.png")
 
+        # slot globals
         self.slots_cords = [(154, 325), (161, 260), (176, 200), (237, 148), (323, 162), (379, 219), (387, 270), (390, 329),
                         (374, 380), (318, 424), (235, 433), (196, 411), (168, 375)]
         self.numbers = [0, 8, 3, 10, 1, 4, 7, 12, 9, 2, 5, 6, 11]
-
         self.slots = []
         self.sorted_slots = []
         self.selected_slot = -1
 
+        # creating the betting board
         piece_size = 75
         self.betting_board = [
             [pg.Rect(((piece_size + 5) * col) + 692, ((piece_size + 5) * row) + 28, piece_size, piece_size) for col in range(4)]
@@ -60,6 +65,7 @@ class Roulette:
         self.down_bet_rect = pg.Rect(890, 584, 36, 40)
 
     def init_slots(self):
+        # creates a list of slots in the order they appear clockwise around the board starting at 0
         for i, x in enumerate(self.slots_cords):
             color = None
             if self.numbers[i] == 0:
@@ -69,7 +75,7 @@ class Roulette:
             else:
                 color = (255, 0, 0)
             self.slots.append(Slot(self.numbers[i], color, x))
-        # sorted_slots = slots
+        # creates a sorted list based the slot number
         self.sorted_slots = self.slots.copy()
         self.sorted_slots.sort(key=lambda slot : slot.number)
 
@@ -89,11 +95,18 @@ class Roulette:
             else:
                 position += 1
             pg.display.update()
-
+            
+    def display_message(self, message):
+        message_text = self.bet_font.render(message, True, (0, 0, 0))
+        self.window.blit(message_text, (660, 430))
 
     def draw_objects(self):
         # background color
         self.window.fill((255, 255, 255))
+
+        # amount of money the use has
+        total_text = pg.font.Font(None, 20)
+        self.window.blit(total_text.render(f"${self.starting_amount}", True, (0, 0, 0)), (1038, 26))
 
         # betting elements
         bet_text = self.bet_font.render(f"{self.bet_amount}", True, (0, 0, 0))
@@ -130,32 +143,45 @@ class Roulette:
         spun = False
         chosen = None
         bet = None
+        current_message = ""
+        cheat = False
         self.init_slots()
         while True:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
+                    
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_CAPSLOCK:
+                        cheat = not cheat   
 
                 if event.type == pg.MOUSEBUTTONDOWN:
-                    # code to easily save mouse positions
+                    # code to easily save mouse positions #
                     # with open("cords.txt", "a") as cords:
                     #     cords.write(", ".join(map(str, event.pos)))
                     #     cords.write("\n")
 
+                    # checks if the betting board has been clicked on and selects it
                     for i in range(15):
                         if self.betting_board[i // 4][i % 4].collidepoint(event.pos):
                             self.selected_slot = i
 
+                    # betting buttons
                     if self.up_bet_rect.collidepoint(event.pos):
                         self.bet_amount += 5
                     if self.down_bet_rect.collidepoint(event.pos):
                         if self.bet_amount >= 5:
                             self.bet_amount -= 5
+
+                    # checks the submit button
                     if self.betting_board[3][3].collidepoint(event.pos) and self.selected_slot != -1 and self.bet_amount != 0:
+                        bet = ""
                         spun = True
-                        chosen = random.randint(0, len(self.slots) - 1)
-                        print(chosen, self.slots[chosen])
+                        if cheat:
+                            chosen = 0
+                        else:
+                            chosen = random.randint(0, len(self.slots) - 1)
                         
                         if self.selected_slot == 13:
                             color_chosen = (0, 0, 0)
@@ -164,15 +190,22 @@ class Roulette:
                         else:
                             color_chosen = None
                         bet = Bet(self.bet_amount, self.selected_slot if 0 <= self.selected_slot <= 12 else None, color_chosen)
+                        print(self.slots[chosen], bet)
                         
                         self.play_ball_animation(chosen)
                         
                         if bet.check_for_win(self.slots[chosen]):
-                            self.bet_amount = f"You Won {self.bet_amount}"
+                            current_message = f"You won {bet.payout_amount}!"
+                            self.starting_amount += bet.payout_amount
+                        else:
+                            current_message = f"You lost {bet.amount} :("
+                            self.starting_amount -= bet.payout_amount
                         
             self.draw_objects()
+            self.display_message(current_message)
             if spun:
                 pg.draw.circle(self.window, (0, 0, 0), self.slots_cords[chosen], 10.0)
+
             pg.display.update()
 
 if __name__ == "__main__":
