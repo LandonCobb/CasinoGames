@@ -4,23 +4,33 @@ import random
 
 
 class Bet:
-    def __init__(self, amount, number=None, color=None, even=False, odd=False, range=None):
+    def __init__(self, amount, number=None, color=None):
         self.amount = amount
         self.number = number
         self.color = color
-        self.even = even
-        self.odd = odd
-        self.range = range
+        self.payout_amount = self.payout()
 
     def payout(self):
-        pass
-
+        return 0
+    
+    def check_for_win(self, slot):
+        if self.number != None:
+            if self.number == slot.number:
+                return True
+        elif self.color != None:
+            if self.color == slot.color:
+                return True
+        else:
+            return False
 
 class Slot:
     def __init__(self, number, color, cord):
         self.number = number
         self.color = color
         self.cord = cord
+
+    def __repr__(self):
+        return f"Slot({self.number}, {self.color}, {self.cord})"
 
 
 pg.init()
@@ -29,12 +39,12 @@ window = pg.display.set_mode((1200, 680))
 
 wheel = pg.image.load("roulette-assets\paintroulette_smol.png")
 
-list_of_things = [(154, 325), (161, 260), (176, 200), (237, 148), (323, 162), (379, 219), (387, 270), (390, 329),
+slots_cords = [(154, 325), (161, 260), (176, 200), (237, 148), (323, 162), (379, 219), (387, 270), (390, 329),
                   (374, 380), (318, 424), (235, 433), (196, 411), (168, 375)]
-
 numbers = [0, 8, 3, 10, 1, 4, 7, 12, 9, 2, 5, 6, 11]
 
 slots = []
+sorted_slots = []
 selected_slot = -1
 
 piece_size = 75
@@ -44,21 +54,24 @@ betting_board = [
 
 # globals for betting
 bet_font = pg.font.Font(None, 36) 
-bet = 0
+bet_amount = 0
 up_bet_rect = pg.Rect(890, 504, 36, 40)
 down_bet_rect = pg.Rect(890, 584, 36, 40)
 
 def init_slots():
-    for i, x in enumerate(list_of_things):
+    global sorted_slots
+    for i, x in enumerate(slots_cords):
         color = None
-        if i == 0:
+        if numbers[i] == 0:
             color = (0, 255, 0)
-        elif i % 2 == 1:
-            color = (255, 0, 0)
-        elif i % 2 == 0:
+        elif numbers[i] % 2 == 0:
             color = (0, 0, 0)
+        else:
+            color = (255, 0, 0)
         slots.append(Slot(numbers[i], color, x))
-    slots.sort(key=lambda slot : slot.number)
+    # sorted_slots = slots
+    sorted_slots = slots.copy()
+    sorted_slots.sort(key=lambda slot : slot.number)
 
 def play_ball_animation(selected):
     playing = True
@@ -67,10 +80,10 @@ def play_ball_animation(selected):
     while playing:
         pg.time.delay(100)
         draw_objects()
-        pg.draw.circle(window, (0, 0, 0), list_of_things[position], 10.0)
+        pg.draw.circle(window, (0, 0, 0), slots_cords[position], 10.0)
         if selected == position and loop == 2:
             playing = False
-        elif position == len(list_of_things) - 1:
+        elif position == len(slots_cords) - 1:
             position = 0
             loop += 1
         else:
@@ -83,7 +96,7 @@ def draw_objects():
     window.fill((255, 255, 255))
 
     # betting elements
-    bet_text = bet_font.render(f"{bet}", True, (0, 0, 0))
+    bet_text = bet_font.render(f"{bet_amount}", True, (0, 0, 0))
     window.blit(bet_text, (900, 554))
 
     up_bet_text = bet_font.render("+", True, (0, 0, 0))
@@ -100,7 +113,7 @@ def draw_objects():
 
     # setting up the betting board
     for i in range(13):
-        pg.draw.rect(window, slots[i].color, betting_board[i // 4][i % 4])
+        pg.draw.rect(window, sorted_slots[i].color, betting_board[i // 4][i % 4])
         number = bet_font.render(f"{i}", True, (255, 255, 255) if i != selected_slot else (0, 0, 255))
         window.blit(number, betting_board[i // 4][i % 4].center)
     pg.draw.rect(window, (0, 0, 0), betting_board[3][1])
@@ -113,13 +126,14 @@ def draw_objects():
 
 def start_game():
     global window
-    global bet
+    global bet_amount
     global selected_slot
     
     window = pg.display.set_mode((1200, 680))
     pg.display.set_caption("Roulette")
     spun = False
     chosen = None
+    bet = None
     init_slots()
     while True:
         for event in pg.event.get():
@@ -134,14 +148,29 @@ def start_game():
                 #     cords.write("\n")
 
                 if up_bet_rect.collidepoint(event.pos):
-                    bet += 5
+                    bet_amount += 5
                 if down_bet_rect.collidepoint(event.pos):
-                    if bet >= 5:
-                        bet -= 5
-                if betting_board[3][3].collidepoint(event.pos):
+                    if bet_amount >= 5:
+                        bet_amount -= 5
+                if betting_board[3][3].collidepoint(event.pos) and selected_slot != -1 and bet_amount != 0:
                     spun = True
                     chosen = random.randint(0, len(slots) - 1)
+                    print(chosen, slots[chosen])
+                    
+                    if selected_slot == 13:
+                        color_chosen = (0, 0, 0)
+                    elif selected_slot == 14:
+                        color_chosen = (255, 0, 0)
+                    else:
+                        color_chosen = None
+                    bet = Bet(bet_amount, selected_slot if 0 <= selected_slot <= 12 else None, color_chosen)
+                    
                     play_ball_animation(chosen)
+                    
+                    if bet.check_for_win(slots[chosen]):
+                        bet_amount = f"You Won {bet_amount}"
+                    
+
                 for i in range(15):
                     if betting_board[i // 4][i % 4].collidepoint(event.pos):
                         selected_slot = i
@@ -149,7 +178,7 @@ def start_game():
 
         draw_objects()
         if spun:
-            pg.draw.circle(window, (0, 0, 0), list_of_things[chosen], 10.0)
+            pg.draw.circle(window, (0, 0, 0), slots_cords[chosen], 10.0)
         pg.display.update()
 
 if __name__ == "__main__":
