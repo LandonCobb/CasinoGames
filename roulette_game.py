@@ -40,7 +40,7 @@ class Roulette:
         
         self.starting_amount = starting_amount
 
-        self.window = pg.display.set_mode((1200, 680))
+        self.window = None
 
         self.wheel = pg.image.load("roulette-assets\paintroulette_smol.png")
 
