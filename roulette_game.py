@@ -1,7 +1,8 @@
 import pygame as pg
 import sys
 import random
-
+import start_main
+import pyautogui
 
 class Bet:
     def __init__(self, amount, number=None, color=None):
@@ -63,6 +64,8 @@ class Roulette:
         self.bet_amount = 0
         self.up_bet_rect = pg.Rect(890, 504, 36, 40)
         self.down_bet_rect = pg.Rect(890, 584, 36, 40)
+        
+        self.back_rect = pg.Rect(0, 0, 15, 30)
 
     def init_slots(self):
         # creates a list of slots in the order they appear clockwise around the board starting at 0
@@ -137,8 +140,13 @@ class Roulette:
         submit_text = self.bet_font.render("Submit", True, (255, 255, 255))
         self.window.blit(submit_text, self.betting_board[3][3])
 
+        back_text = self.bet_font.render("<", True, (0, 0, 0))
+        pg.draw.rect(self.window, (240, 240, 240), self.back_rect)
+        self.window.blit(back_text, self.back_rect)
+
     def start_game(self):
-        self.window = pg.display.set_mode((1200, 680))
+        screen_width, screen_height = pyautogui.size()        
+        self.window = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
         pg.display.set_caption("Roulette")
         spun = False
         chosen = None
@@ -161,6 +169,9 @@ class Roulette:
                     # with open("cords.txt", "a") as cords:
                     #     cords.write(", ".join(map(str, event.pos)))
                     #     cords.write("\n")
+
+                    if self.back_rect.collidepoint(event.pos):
+                        start_main.start()
 
                     # checks if the betting board has been clicked on and selects it
                     for i in range(15):
