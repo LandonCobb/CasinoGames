@@ -3,6 +3,7 @@ import sys
 import random
 import pyautogui
 import time
+import start_main
 
 # set the game screen  
 
@@ -47,8 +48,7 @@ def start_game():
             if event.type == pg.MOUSEBUTTONUP and buttonActive:
                 pos = pg.mouse.get_pos()
                 if back.collidepoint(pos):
-                    pg.quit()
-                    sys.exit()
+                    start_main.start()
                 if lever.collidepoint(pos):
                     draw_objects()
                     game_logic()
