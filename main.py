@@ -1,6 +1,5 @@
 import pygame, pyautogui, pygame_menu, slots_game, blackjack_game
-
-import craps_game
+from craps_game import CrapsGame
 from roulette_game import Roulette
 
 pygame.init()
@@ -14,9 +13,9 @@ def run_roulette():
     roulette = Roulette(money)
     roulette.start_game()
 
-def craps():
-    pass
-
+def run_craps():
+    craps = CrapsGame(money)
+    craps.start_game()
 
 def playerAccount():
     pass
@@ -40,11 +39,11 @@ mainTheme = pygame_menu.Theme(
 
 main_menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height, theme=mainTheme)
 
-name = main_menu.add.text_input('Name :', default="LeBron James").get_value()  # can store this value somewhere
+name = main_menu.add.text_input('Name :', default="LeBron James").get_value()
 main_menu.add.button('Roulette Table', run_roulette)
 main_menu.add.button('Black Jack', blackjack_game.start_game)
 main_menu.add.button('Slots', slots_game.start_game)
-main_menu.add.button('Shits', craps_game.start_game)
+main_menu.add.button('Shits', run_craps)
 main_menu.add.button('See Balance', playerAccount)
 main_menu.add.button('Quit', quit_game)
 
