@@ -1,7 +1,9 @@
-import pygame, pyautogui, pygame_menu, slots_game, blackjack_game
+import pygame, pyautogui, pygame_menu, sys
 
 import craps_game
+from player_money import PlayerMuns
 from roulette_game import Roulette
+from slots_game import Slots
 
 pygame.init()
 screen_width, screen_height = pyautogui.size()
@@ -14,17 +16,23 @@ def run_roulette():
     roulette = Roulette(money)
     roulette.start_game()
 
+def run_slots():
+    slots = Slots(money)
+    slots.start_game()
+
 def craps():
     pass
 
 
 def playerAccount():
-    pass
+    muns = PlayerMuns(money)
+    muns.start_menu()
 
 def quit_game():
     with open("money.txt", "w") as file:
         file.write(str(money))
-        pygame.events.EXIT
+        pygame.quit()
+        sys.exit()
 
 
 myimage = pygame_menu.baseimage.BaseImage(
@@ -40,10 +48,8 @@ mainTheme = pygame_menu.Theme(
 
 main_menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height, theme=mainTheme)
 
-name = main_menu.add.text_input('Name :', default="LeBron James").get_value()  # can store this value somewhere
 main_menu.add.button('Roulette Table', run_roulette)
-main_menu.add.button('Black Jack', blackjack_game.start_game)
-main_menu.add.button('Slots', slots_game.start_game)
+main_menu.add.button('Slots', run_slots)
 main_menu.add.button('Shits', craps_game.start_game)
 main_menu.add.button('See Balance', playerAccount)
 main_menu.add.button('Quit', quit_game)
