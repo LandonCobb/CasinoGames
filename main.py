@@ -1,5 +1,7 @@
 import pygame, pyautogui, pygame_menu, slots_game, blackjack_game
-import roulette_game
+
+import craps_game
+from roulette_game import Roulette
 
 pygame.init()
 screen_width, screen_height = pyautogui.size()
@@ -9,7 +11,7 @@ pygame.display.update()
 money = 1
 
 def run_roulette():
-    roulette = roulette_game.Roulette(money)
+    roulette = Roulette(money)
     roulette.start_game()
 
 def craps():
@@ -42,7 +44,7 @@ name = main_menu.add.text_input('Name :', default="LeBron James").get_value()  #
 main_menu.add.button('Roulette Table', run_roulette)
 main_menu.add.button('Black Jack', blackjack_game.start_game)
 main_menu.add.button('Slots', slots_game.start_game)
-main_menu.add.button('Craps', craps)
+main_menu.add.button('Shits', craps_game.start_game)
 main_menu.add.button('See Balance', playerAccount)
 main_menu.add.button('Quit', quit_game)
 
@@ -51,6 +53,3 @@ def start_main(user_money = 10000):
     money = user_money
     print(money)
     main_menu.mainloop(base_screen)
-
-if __name__ == "__main__":
-    start_main()
