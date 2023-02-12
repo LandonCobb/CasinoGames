@@ -36,7 +36,7 @@ class Slot:
         return f"Slot({self.number}, {self.color}, {self.cord})"
 
 class Roulette:
-    def __init__(self, starting_amount = 1000):
+    def __init__(self, starting_amount):
         pg.init()
         
         self.starting_amount = starting_amount
@@ -171,7 +171,7 @@ class Roulette:
                     #     cords.write("\n")
 
                     if self.back_rect.collidepoint(event.pos):
-                        start_main.start()
+                        start_main.start(self.starting_amount)
 
                     # checks if the betting board has been clicked on and selects it
                     for i in range(15):

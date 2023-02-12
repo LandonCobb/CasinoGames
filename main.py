@@ -6,12 +6,23 @@ screen_width, screen_height = pyautogui.size()
 base_screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
 pygame.display.update()
 
+money = 1
+
+def run_roulette():
+    roulette = roulette_game.Roulette(money)
+    roulette.start_game()
+
 def craps():
     pass
 
 
 def playerAccount():
     pass
+
+def quit_game():
+    with open("money.txt", "w") as file:
+        file.write(str(money))
+        pygame.events.EXIT
 
 
 myimage = pygame_menu.baseimage.BaseImage(
@@ -28,14 +39,17 @@ mainTheme = pygame_menu.Theme(
 main_menu = pygame_menu.Menu('Welcome to a casino', screen_width, screen_height, theme=mainTheme)
 
 name = main_menu.add.text_input('Name :', default="LeBron James").get_value()  # can store this value somewhere
-main_menu.add.button('Roulette Table', roulette_game.Roulette().start_game)
+main_menu.add.button('Roulette Table', run_roulette)
 main_menu.add.button('Black Jack', blackjack_game.start_game)
 main_menu.add.button('Slots', slots_game.start_game)
 main_menu.add.button('Craps', craps)
 main_menu.add.button('See Balance', playerAccount)
-main_menu.add.button('Quit', pygame_menu.events.EXIT)
+main_menu.add.button('Quit', quit_game)
 
-def start_main():
+def start_main(user_money = 10000):
+    global money
+    money = user_money
+    print(money)
     main_menu.mainloop(base_screen)
 
 if __name__ == "__main__":
