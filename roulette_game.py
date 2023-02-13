@@ -180,7 +180,8 @@ class Roulette:
 
                     # betting buttons
                     if self.up_bet_rect.collidepoint(event.pos):
-                        self.bet_amount += 5
+                        if self.bet_amount <= self.starting_amount - 5:
+                            self.bet_amount += 5
                     if self.down_bet_rect.collidepoint(event.pos):
                         if self.bet_amount >= 5:
                             self.bet_amount -= 5
